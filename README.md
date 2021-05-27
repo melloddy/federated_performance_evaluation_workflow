@@ -1,1 +1,3 @@
-# federated_performance_evaluation_workflow
+federated_performance_evaluation_workflow
+
+release 2 (classification and regression)
