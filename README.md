@@ -10,17 +10,15 @@ On your local IT infrastructure you'd need
 1. Python 3.6 or higher
 2. Local Conda installation (e.g. miniconda)
 3. Git installation
-4. melloddy_tuner environment from WP1 code: https://git.infra.melloddy.eu/wp1/data_prep
-5. sparsechem version 0.6.1: https://git.infra.melloddy.eu/wp2/sparsechem/-/tree/v0.6.1 (with sparse-predict functionality) installation from WP2 code. This is required to generate *sparse* on-premise predictions (not required to run the performance_evaluation[_derisk/pred].py code)
+4. melloddy_tuner environment from WP1 code: https://github.com/melloddy/MELLODDY-TUNER
+5. sparsechem https://github.com/melloddy/SparseChem (with sparse-predict functionality).
 
-
-Alternatively you can install the combined enrionment in environment_melloddy_combined.yml using `conda env create -f development/environment_melloddy_combined.yml`
+Alternatively to step 4/5 you can install the combined enrionment in environment_melloddy_combined.yml using `conda env create -f development/environment_melloddy_combined.yml`
 
 # Example 1: De-risk analysis (on-premise vs. single-partner substra output evaluation)
 
 ## Build onpremise model (with your local sparsechem)
-0. Update sparsechem to v.0.6.2 and install it again.
-1. Train a model with sparsechem (v0.6.2) using the same input data as for the federated run (sparsechem/examples/chembl/train.py)
+1. Train a model with sparsechem using the same input data as for the federated run (sparsechem/examples/chembl/train.py)
 2. Choose the hyperparameters from the federated system (weight_decay depends on your data size):
 ```
 python sparsechem/examples/chembl/train.py  --x x.npy \
@@ -55,7 +53,6 @@ filtered_perf = perf.loc[(perf['num_pos']>=5 ) & (perf['num_neg']>=5)]
 mean_auc_pr = filtered_perf.auc_pr.mean()
 ```
 
-Please compare this `mean_auc_pr` with the reported performance at epoch 20 in the yearly_dashboad [Box](https://app.box.com/file/619214037978?s=t0voje8gqvxy8bm6vkkivs6js63u6udq)
 ## Setup
 
 1. Download the substra output
@@ -108,7 +105,7 @@ optional arguments:
 
 ## Running the de-risk code
 ```
-python performance_evaluation_derisk.py --y_true_all pharma_partners/pharma_y_partner_1.npy --y_pred_substra Single_pharma_run-1/medias/subtuple/c4f1c9b9d44fea66f9b856d346a0bb9aa5727e587185e87daca170f239a70029/pred/pred --folding pharma_partners/folding_partner_1.npy --substra_performance_report Single_pharma_run-1/medias/subtuple/c4f1c9b9d44fea66f9b856d346a0bb9aa5727e587185e87daca170f239a70029/perf/perf.json --filename derisk_test --task_map pharma_partners/weight_table_T3_mapped.csv --y_pred_onpremise y_hat1.npy
+python performance_evaluation_derisk.py --y_true_all pharma_partners/pharma_y_partner_1.npy --y_pred_substra Single_pharma_run-1/medias/subtuple/<hash>/pred/pred --folding pharma_partners/folding_partner_1.npy --substra_performance_report Single_pharma_run-1/medias/subtuple/<hash>/perf/perf.json --filename derisk_test --task_map pharma_partners/weight_table_T3_mapped.csv --y_pred_onpremise y_hat1.npy
 ```
 
 The output should look something like:
@@ -227,7 +224,7 @@ deltas_global_performances.csv               #global delta of file 1/2 perf
 
 This is an example with a single archive with all input files required already prepared. All files were taken for a single pharma partner from the phase 2 run on public chembl data. This example archive is just to get you started on the evaluation and should be used as minimum working example to test the performance evaluation script on your infrastructure. Once you get this to work, replace all input files with your relevant input files with your private data/models. 
 
-[Download the example archive from box](https://app.box.com/file/694962399922) and extract it into the `data` folder. 
+[Download the example archive and extract it into the `data` folder. 
 
 To run the sample single/multi partner evaluation run: 
 ```bash
